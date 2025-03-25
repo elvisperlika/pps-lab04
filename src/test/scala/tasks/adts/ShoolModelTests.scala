@@ -15,3 +15,8 @@ class SchoolModelTest:
         assertEquals(nil(), school.teachers)
         assertEquals(nil(), school.courses)
 
+    @Test def testTeacherAndCourseCreation(): Unit =
+        val viroli = teacher("Viroli")
+        assertEquals("Viroli", viroli)
+        val pps = course("PPS")
+        assertEquals("PPS", pps)

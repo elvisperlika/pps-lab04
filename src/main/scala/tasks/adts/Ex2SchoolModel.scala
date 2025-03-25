@@ -119,8 +119,8 @@ object SchoolModel:
     override type Teacher = String
     override type Course = String
 
-    def teacher(name: String): Teacher = ???
-    def course(name: String): Course = ???
+    def teacher(name: String): Teacher = name
+    def course(name: String): Course = name
     def emptySchool: School = Sequence.nil()
 
     extension (school: School)
