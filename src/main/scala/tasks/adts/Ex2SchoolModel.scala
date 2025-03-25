@@ -1,6 +1,7 @@
 package tasks.adts
 import u03.extensionmethods.Optionals.*
 import u03.extensionmethods.Sequences.*
+import u03.extensionmethods.Sequences.Sequence.Cons
 
 /*  Exercise 2: 
  *  Implement the below trait, and write a meaningful test.
@@ -110,18 +111,27 @@ object SchoolModel:
        *
        */
       def hasCourse(name: String): Boolean
+      
   object BasicSchoolModule extends SchoolModule:
-    override type School = Nothing
-    override type Teacher = Nothing
-    override type Course = Nothing
+    import Sequence.*
+    
+    override type School = Sequence[(Teacher, Course)]
+    override type Teacher = String
+    override type Course = String
 
     def teacher(name: String): Teacher = ???
     def course(name: String): Course = ???
-    def emptySchool: School = ???
+    def emptySchool: School = Sequence.nil()
 
     extension (school: School)
-      def courses: Sequence[String] = ???
-      def teachers: Sequence[String] = ???
+      def courses: Sequence[String] = school match
+        case Cons((_, course), tail) => Cons(course, tail.teachers)
+        case _ => nil()
+        
+      def teachers: Sequence[String] = school match
+        case Cons((teacher, _), tail) => Cons(teacher, tail.teachers)
+        case _ => nil()
+        
       def setTeacherToCourse(teacher: Teacher, course: Course): School = ???
       def coursesOfATeacher(teacher: Teacher): Sequence[Course] = ???
       def hasTeacher(name: String): Boolean = ???
