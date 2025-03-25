@@ -1,7 +1,5 @@
 package tasks.adts
-import u03.extensionmethods.Optionals.*
 import u03.extensionmethods.Sequences.*
-import u03.extensionmethods.Sequences.Sequence.Cons
 
 /*  Exercise 2: 
  *  Implement the below trait, and write a meaningful test.
@@ -125,7 +123,7 @@ object SchoolModel:
 
     extension (school: School)
       def courses: Sequence[String] = school match
-        case Cons((_, course), tail) => Cons(course, tail.teachers)
+        case Cons((_, course), tail) => Cons(course, tail.courses)
         case _ => nil()
 
       def teachers: Sequence[String] = school match
@@ -138,8 +136,10 @@ object SchoolModel:
           .filter((teacher2, _) => teacher2 == teacher)
           .map((_, course2) => course2)
 
-      def hasTeacher(name: String): Boolean = ???
-      def hasCourse(name: String): Boolean = ???
+      def hasTeacher(name: String): Boolean = school.teachers.filter(t => t == name) != nil()
+
+      def hasCourse(name: String): Boolean = school.courses.filter(c => c == name) != nil()
+      
 @main def examples(): Unit =
   import SchoolModel.BasicSchoolModule.*
   val school = emptySchool
