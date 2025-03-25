@@ -3,8 +3,6 @@ import u03.Optionals.Optional
 import u03.Sequences.*
 import u03.Sequences.Sequence.*
 
-import scala.annotation.tailrec
-
 /*  Exercise 5: 
  *  - Generalise by ad-hoc polymorphism logAll, such that:
  *  -- it can be called on Sequences but also on Optional, or others... 
@@ -22,10 +20,13 @@ object Ex5Traversable:
 
   def log[A](a: A): Unit = println("The next element is: "+a)
 
-  @tailrec
-  def logAll[A](seq: Sequence[A]): Unit = seq match
-    case Cons(h, t) => log(h); logAll(t)
-    case _ => ()
+  def logAll[A, T[_]: Traversable](struct: T[A]): Unit =
+    val traversable = summon[Traversable[T]]
+    traversable.traverse(struct)(log)
+
+  def printAll[A, T[_] : Traversable](struct: T[A]): Unit =
+    val traversable = summon[Traversable[T]]
+    traversable.traverse(struct)(println(_))
 
   trait Traversable[T[_]]:
     // def log[A](t: A): Unit = println(t)
@@ -40,3 +41,16 @@ object Ex5Traversable:
     override def traverse[A](t: Sequence[A])(con: A => Unit): Unit = t match
       case Cons(h, t) => con(h); traverse(t)(con)
       case _ => ()
+
+  @main def main() =
+
+    val empty = Optional.Empty()
+    val opt = Optional.Just("bella")
+    val seq = Cons(10, Cons(20, Cons(30, Nil())))
+    logAll(empty)
+    printAll(empty)
+    logAll(opt)
+    printAll(opt)
+    logAll(seq)
+    println(seq)
+
