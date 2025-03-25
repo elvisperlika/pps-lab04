@@ -114,7 +114,7 @@ object SchoolModel:
       
   object BasicSchoolModule extends SchoolModule:
     import Sequence.*
-    
+
     override type School = Sequence[(Teacher, Course)]
     override type Teacher = String
     override type Course = String
@@ -127,13 +127,17 @@ object SchoolModel:
       def courses: Sequence[String] = school match
         case Cons((_, course), tail) => Cons(course, tail.teachers)
         case _ => nil()
-        
+
       def teachers: Sequence[String] = school match
         case Cons((teacher, _), tail) => Cons(teacher, tail.teachers)
         case _ => nil()
-        
-      def setTeacherToCourse(teacher: Teacher, course: Course): School = ???
-      def coursesOfATeacher(teacher: Teacher): Sequence[Course] = ???
+
+      def setTeacherToCourse(teacher: Teacher, course: Course): School = school.concat(Cons((teacher, course), Nil()))
+
+      def coursesOfATeacher(teacher: Teacher): Sequence[Course] = school
+          .filter((teacher2, _) => teacher2 == teacher)
+          .map((_, course2) => course2)
+
       def hasTeacher(name: String): Boolean = ???
       def hasCourse(name: String): Boolean = ???
 @main def examples(): Unit =
